@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import FileDisplay from "./FileDisplay";
-import Loading from "./Loading";
+import {Loading} from "./Loading";
 
 
 

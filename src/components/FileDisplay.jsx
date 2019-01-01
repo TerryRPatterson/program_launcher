@@ -4,6 +4,7 @@ import HideButton from "./HideButton";
 import {connect} from "react-redux";
 import {hideFile} from "../reducers/actionCreators";
 
+
 let types = {};
 
 types[isExecutable.type] = isExecutable.execute;

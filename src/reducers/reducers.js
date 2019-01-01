@@ -42,6 +42,7 @@ export let loading = (prevState=true, action) => {
     return prevState;
 };
 
+
 let reducers = {fileList, blackList, prefix, loading};
 
 export default reducers;

@@ -3,6 +3,7 @@ node_modules/
 # Build Folders
 app/
 dist/
+build/
 
 # MacOS Finder
 .DS_Store
@@ -12,3 +13,6 @@ dist/
 
 # Jest Snapshot Folder
 **/__snapshots__/
+
+yarn-error.log
+*-flash-plugin.so

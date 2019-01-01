@@ -9,7 +9,6 @@ const stat = util.promisify(fs.stat);
 
 
 let checkFile = async (dir, file, checks, checkCurrent, prefix) => {
-    // setCurrentLoading(dir);
     let results = {};
     let fileURL = path.resolve(dir, file);
     let fileStat = await stat(fileURL);
