@@ -1,8 +1,10 @@
+"use strict";
 import React from "react";
 import {isExecutable, isHTML, isSWF} from "../lib/fileChecks";
 import HideButton from "./HideButton";
 import {connect} from "react-redux";
 import {hideFile} from "../reducers/actionCreators";
+import PropTypes from "prop-types";
 
 
 const types = {};
@@ -20,6 +22,21 @@ const mapDispatchToProps = (dispatch, {url}) => {
     return {hide};
 };
 
+
+/** Display a file.
+    @function
+    @param {object} main Contains all arguments.
+    @param {string} main.type The type of the file.
+    @param {string} main.url The url of the file.
+    @param {string} main.name The name of the file.
+    @param {function} main.setHover Function to set hovered element.
+    @param {function} main.unHover Set to remove hovered element.
+    @param {string} main.hovered The url of currently hovered element.
+    @param {string} main.parentDirectories The name of the directories
+        containing the file without the current search prefix.
+    @param {string} main.nameNoExtension The name of the file without a file
+        extension.
+    @return {React.element}*/
 export const FileDisplay = ({type, url, name, setHover, unHover, hovered,
     parentDirectories, nameNoExtension}) => {
     const hover = (event) => {
@@ -53,6 +70,17 @@ export const FileDisplay = ({type, url, name, setHover, unHover, hovered,
             {body}
             <HideButton fileURL={url}/>
         </div>);
+};
+
+FileDisplay.propTypes = {
+    type: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    setHover: PropTypes.func.isRequired,
+    unHover: PropTypes.func.isRequired,
+    hovered: PropTypes.string,
+    parentDirectories: PropTypes.string.isRequired,
+    nameNoExtension: PropTypes.string.isRequired,
 };
 
 const ConnectedFileDisplay = connect(null,

@@ -1,25 +1,49 @@
+"use strict";
 import React from "react";
 import {connect} from "react-redux";
 import FileDisplay from "./FileDisplay";
 import Loading from "./Loading";
+import PropTypes from "prop-types";
 
 
 const mapStateToProps = ({fileList, blackList}) => {
     return {fileList, blackList};
 };
 
+/** List of files stored in redux store.
+    */
 export class FileList extends React.Component {
+    /** Set which file is currently hovered.
+        @param {string} fileURL the file url of the currently hovered.
+        @return {undefined}*/
     setHover(fileURL) {
         this.setState(() => {
             return {hovered: fileURL};
         });
     }
 
+    /** @constructor
+        @param {object} props the passed properties of the react component.
+        @param {object} props.fileList a list of files to display.
+        @param {string} props.fileList.type the type of the file.
+        @param {string} props.fileList.nameNoExtension The name of the file no
+            extension.
+        @param {string} props.fileList.parentDirectories The parent directories
+            exluding the search prefix.
+        @param {string} props.fileList.name The name of the file.
+        @param {string} props.fileList.url The url to the file.
+        @param {object} propes.blackList The blacklist of file not to be
+            displayed. The key should be the file url and the value true if the
+            file is blacklisted.
+    */
     constructor(props) {
         super(props);
         this.state = {hovered: null};
     }
 
+    /** Rendering logic for the component.
+        @return {React.element}
+        */
     render() {
         const {fileList, blackList} = this.props;
         const {hovered} = this.state;
@@ -36,7 +60,6 @@ export class FileList extends React.Component {
                     type,
                     name,
                     url,
-                    execute,
                     parentDirectories,
                     nameNoExtension,
                 } = fileList[fileURL];
@@ -49,6 +72,17 @@ export class FileList extends React.Component {
         </div>;
     }
 }
+
+FileList.propTypes = {
+    fileList: PropTypes.objectOf(PropTypes.shape({
+        type: PropTypes.string.isRequired,
+        nameNoExtension: PropTypes.string.isRequired,
+        parentDirectories: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        url: PropTypes.string.isRequired,
+    })),
+    blackList: PropTypes.objectOf(PropTypes.bool.isRequired),
+};
 
 
 const ConnectedFileList = connect(mapStateToProps)(FileList);
