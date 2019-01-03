@@ -4,16 +4,14 @@ import FileDisplay from "./FileDisplay";
 import Loading from "./Loading";
 
 
-
-let mapStateToProps = ({fileList, blackList}) => {
-    return {fileList, blackList,};
+const mapStateToProps = ({fileList, blackList}) => {
+    return {fileList, blackList};
 };
 
-export class FileList extends React.Component{
-
-    setHover(fileURL){
+export class FileList extends React.Component {
+    setHover(fileURL) {
         this.setState(() => {
-            return {hovered:fileURL};
+            return {hovered: fileURL};
         });
     }
 
@@ -23,8 +21,8 @@ export class FileList extends React.Component{
     }
 
     render() {
-        let {fileList, blackList} = this.props;
-        let {hovered} = this.state;
+        const {fileList, blackList} = this.props;
+        const {hovered} = this.state;
         if (Object.keys(fileList).length === 0) {
             return <Loading/>;
         }
@@ -34,16 +32,16 @@ export class FileList extends React.Component{
                 if (blackList[fileURL] === true) {
                     return null;
                 }
-                let {
+                const {
                     type,
                     name,
                     url,
                     execute,
                     parentDirectories,
-                    nameNoExtension
+                    nameNoExtension,
                 } = fileList[fileURL];
                 return <FileDisplay type={type} name={name} hovered={hovered}
-                    parentDirectories={parentDirectories} execute={execute}
+                    parentDirectories={parentDirectories}
                     key={url} url={url} nameNoExtension={nameNoExtension}
                     setHover={() => this.setHover(url)}
                     unHover={() => this.setHover(null)}/>;
@@ -53,6 +51,6 @@ export class FileList extends React.Component{
 }
 
 
-let ConnectedFileList = connect(mapStateToProps)(FileList);
+const ConnectedFileList = connect(mapStateToProps)(FileList);
 
 export default ConnectedFileList;

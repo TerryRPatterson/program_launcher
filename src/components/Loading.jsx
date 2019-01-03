@@ -69,4 +69,5 @@ let Loading = () => {
     </svg>;
 };
 
+
 export default Loading;

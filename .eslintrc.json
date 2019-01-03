@@ -1,0 +1,20 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "extends": ["eslint:recommended", "google", "plugin:react/recommended"],
+    "rules": {
+        "no-console": ["off"],
+        "quotes": ["error", "double"],
+        "max-len": ["error", {"tabWidth": 4}],
+        "indent": ["error", 4],
+        "prefer-const": "warn"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018,
+       "sourceType": "module"
+  }
+
+}
