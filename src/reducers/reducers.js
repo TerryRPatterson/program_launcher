@@ -1,21 +1,20 @@
-export let fileList = (prevState={}, action) => {
+export const fileList = (prevState={}, action) => {
     if (action.type === "fileList") {
         return action["fileList"];
     }
     return prevState;
 };
 
-export let blackList = (prevState={}, action) => {
-    let namespace = /^blackList\//;
+export const blackList = (prevState={}, action) => {
+    const namespace = /^blackList\//;
     if (namespace.test(action.type)) {
-        let type = action.type.replace(namespace, "");
+        const type = action.type.replace(namespace, "");
         if (type === "add") {
-            let newEntry = {[action["entry"]]:true};
-            let newList = Object.assign({}, prevState, newEntry);
+            const newEntry = {[action["entry"]]: true};
+            const newList = Object.assign({}, prevState, newEntry);
             return newList;
-        }
-        else if (type === "remove") {
-            let newList = Object.assign({}, prevState);
+        } else if (type === "remove") {
+            const newList = Object.assign({}, prevState);
             delete newList[action["entry"]];
             return newList;
         }
@@ -24,10 +23,10 @@ export let blackList = (prevState={}, action) => {
 };
 
 
-export let prefix = (prevState=null, action) => {
-    let namespace = /^prefix\//;
+export const prefix = (prevState=null, action) => {
+    const namespace = /^prefix\//;
     if (namespace.test(action.type)) {
-        let type = action.type.replace(namespace, "");
+        const type = action.type.replace(namespace, "");
         if (type === "set") {
             return action.prefix;
         }
@@ -35,7 +34,7 @@ export let prefix = (prevState=null, action) => {
     return prevState;
 };
 
-export let loading = (prevState=true, action) => {
+export const loading = (prevState=true, action) => {
     if (action.type === "loading") {
         return action["value"];
     }
@@ -43,6 +42,6 @@ export let loading = (prevState=true, action) => {
 };
 
 
-let reducers = {fileList, blackList, prefix, loading};
+const reducers = {fileList, blackList, prefix, loading};
 
 export default reducers;

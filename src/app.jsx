@@ -3,12 +3,13 @@ import FileList from "./components/FileList";
 import PrefixDisplay from "./components/PrefixDisplay";
 import {connect} from "react-redux";
 import Loading from "./components/Loading";
+import PropTypes from "prop-types";
 
-let mapStateToProps = ({loading}) => {
+const mapStateToProps = ({loading}) => {
     return {loading};
 };
 
-let App = ({loading}) => {
+const App = ({loading}) => {
     return (
         <div className={"app"}>
             <PrefixDisplay/>
@@ -22,7 +23,11 @@ let App = ({loading}) => {
     );
 };
 
+App.propTypes = {
+    loading: PropTypes.bool.isRequired,
+};
 
-let ConnectedApp = connect(mapStateToProps)(App);
+
+const ConnectedApp = connect(mapStateToProps)(App);
 
 export default ConnectedApp;
