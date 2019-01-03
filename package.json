@@ -8,7 +8,8 @@
     "build": "gulp build",
     "start": "gulp start",
     "test": "gulp test",
-    "release": "gulp release"
+    "release": "gulp release",
+    "build-doc": "jsdoc -r src"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -33,6 +34,7 @@
     "gulp-css": "^0.1.0",
     "gulp-sourcemaps": "^2.6.4",
     "jest": "^22.4.2",
+    "jsdoc": "^3.5.5",
     "react-test-renderer": "^16.2.0"
   },
   "dependencies": {
@@ -44,6 +46,7 @@
     "electron-is-dev": "^0.3.0",
     "gulp-babel": "^8.0.0",
     "moment": "^2.22.2",
+    "prop-types": "^15.6.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.7",

@@ -1,6 +1,7 @@
+"use strict";
 import fs from "fs";
 import url from "url";
-import child_process from "child_process";
+import childProcess from "child_process";
 import path from "path";
 import {homedir} from "os";
 import moment from "moment";
@@ -73,7 +74,7 @@ const isExecutableCheck = ({fileStat}) => {
 const exectueProcess = (fileLocation, name, parentDirectories) => {
     const directory = path.dirname(fileLocation);
     process.chdir(directory);
-    const child = child_process.spawn(fileLocation);
+    const child = childProcess.spawn(fileLocation);
     openLogFile(fileLocation, name, parentDirectories,
         child.stdout, child.stderr);
     child.stdout.on("data", (data) => {

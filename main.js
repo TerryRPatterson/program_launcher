@@ -1,3 +1,4 @@
+"use strict";
 import electron from "electron";
 import path from "path";
 import url from "url";
@@ -73,7 +74,8 @@ const createWindow = () => {
                 title: frameName,
                 webPreferences: {
                     nodeIntegration: false,
-                    contextIsolation: true}
+                    contextIsolation: true,
+                },
             };
             const win = new BrowserWindow(newOptions);
             win.once("ready-to-show", () => win.show());
