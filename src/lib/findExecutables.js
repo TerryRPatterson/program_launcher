@@ -7,35 +7,34 @@ const readdir = util.promisify(fs.readdir);
 const stat = util.promisify(fs.stat);
 
 
-
-
-let checkFile = async (dir, file, checks, checkCurrent, prefix) => {
+const checkFile = async (dir, file, checks, checkCurrent, prefix) => {
     let results = {};
-    let fileURL = path.resolve(dir, file);
-    let fileStat = await stat(fileURL);
-    if (fileStat){
+    const fileURL = path.resolve(dir, file);
+    const fileStat = await stat(fileURL);
+    if (fileStat) {
         if (fileStat.isDirectory()) {
-            let res = await findExecutables(fileURL, checks, checkCurrent,
+            const res = await findExecutables(fileURL, checks, checkCurrent,
                 prefix);
             results = Object.assign(results, res);
             return results;
         }
-        for (let {check} of checks) {
-            let type = check({file, fileStat});
-            //check returns false if it does not match and returns type string
+        for (const {check} of checks) {
+            const type = check({file, fileStat});
+            // check returns false if it does not match and returns type string
             // the file matches check
             if (type) {
-                let noPrefix = fileURL.replace(prefix, "");
-                let parentDirectories = path.dirname(noPrefix);
-                let noLeadingSlashParent = parentDirectories.replace(/^\//, "");
-                let fileExtension = path.extname(file);
-                let nameNoExtension = file.replace(fileExtension, "");
+                const noPrefix = fileURL.replace(prefix, "");
+                const parentDirectories = path.dirname(noPrefix);
+                const noLeadingSlashParent = parentDirectories.replace(/^\//,
+                    "");
+                const fileExtension = path.extname(file);
+                const nameNoExtension = file.replace(fileExtension, "");
                 results[fileURL] = {
                     type,
                     nameNoExtension,
                     parentDirectories: noLeadingSlashParent,
-                    name:file,
-                    url:fileURL,
+                    name: file,
+                    url: fileURL,
                 };
                 return results;
             }
@@ -43,17 +42,20 @@ let checkFile = async (dir, file, checks, checkCurrent, prefix) => {
     }
     return false;
 };
-let findExecutables = async (directory, checks, checkCurrent,
+
+const findExecutables = async (directory, checks, checkCurrent,
     prefix=directory) => {
-    let currentSearch = checkCurrent(prefix);
-    if (!currentSearch) {return false;}
+    const currentSearch = checkCurrent(prefix);
+    if (!currentSearch) {
+        return false;
+    }
     let results = {};
-    let promises = [];
-    let nodes = await readdir(directory);
-    let pending = nodes.length;
+    const promises = [];
+    const nodes = await readdir(directory);
+    const pending = nodes.length;
     if (!pending) return results;
-    for (let node of nodes) {
-        let fileInProgress = checkFile(directory, node, checks, checkCurrent,
+    for (const node of nodes) {
+        const fileInProgress = checkFile(directory, node, checks, checkCurrent,
             prefix).then(
             (usefulBits) => {
                 if (usefulBits) {
