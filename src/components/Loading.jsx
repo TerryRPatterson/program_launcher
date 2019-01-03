@@ -7,10 +7,8 @@ const Logo = () => {
         xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
         viewBox="0 0 841.9 595.3" enableBackground="new 0 0 841.9 595.3"
         xmlSpace="preserve">
-        {/* eslint-disable max-len*/}
         <g>
             <path fill="#61DAFB" d={svgData}/>
-            {/* eslint-enable max-len*/}
             <polygon fill="#61DAFB" points="320.8,78.4 320.8,78.4 320.8,78.4 "/>
             <circle fill="#61DAFB" cx="420.9" cy="296.5" r="45.7"/>
             <polygon fill="#61DAFB" points="520.5,78.1 520.5,78.1 520.5,78.1 "/>
@@ -18,8 +16,7 @@ const Logo = () => {
     </svg>;
 };
 
-let Loading = () => {
-
+const Loading = () => {
     return <svg width="200px" height="200px" xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100"
         preserveAspectRatio="xMidYMid" className="loading"
