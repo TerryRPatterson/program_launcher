@@ -16,3 +16,5 @@ build/
 
 yarn-error.log
 *-flash-plugin.so
+
+logs/

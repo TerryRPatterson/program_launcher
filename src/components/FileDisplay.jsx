@@ -5,30 +5,30 @@ import {connect} from "react-redux";
 import {hideFile} from "../reducers/actionCreators";
 
 
-let types = {};
+const types = {};
 
 types[isExecutable.type] = isExecutable.execute;
 types[isHTML.type] = isHTML.execute;
 types[isSWF.type] = isSWF.execute;
 
 
-let mapDispatchToProps = (dispatch, {url}) => {
-    let hide = (event) => {
+const mapDispatchToProps = (dispatch, {url}) => {
+    const hide = (event) => {
         event.stopPropagation();
         dispatch(hideFile(url));
     };
     return {hide};
 };
 
-export let FileDisplay = ({type, url, name, setHover, unHover, hovered,
+export const FileDisplay = ({type, url, name, setHover, unHover, hovered,
     parentDirectories, nameNoExtension}) => {
-    let hover = (event) => {
+    const hover = (event) => {
         if (event.ctrlKey) {
             setHover();
         }
     };
-    let execute = types[type];
-    let onClickHandler = () => {
+    const execute = types[type];
+    const onClickHandler = () => {
         execute(url, nameNoExtension, parentDirectories);
     };
     let body;
@@ -39,9 +39,8 @@ export let FileDisplay = ({type, url, name, setHover, unHover, hovered,
             Url:{parentDirectories}<br/>
             Name:{name}<br/>
             </div>);
-    }
-    else {
-        if (parentDirectories){
+    } else {
+        if (parentDirectories) {
             body = `${parentDirectories}/${name}`;
         } else {
             body = name;
@@ -56,7 +55,7 @@ export let FileDisplay = ({type, url, name, setHover, unHover, hovered,
         </div>);
 };
 
-let ConnectedFileDisplay = connect(null,
+const ConnectedFileDisplay = connect(null,
     mapDispatchToProps)(FileDisplay);
 
 export default ConnectedFileDisplay;

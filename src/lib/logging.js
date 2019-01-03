@@ -1,21 +1,32 @@
-import {Console} from "console";
 import fs from "fs";
 import moment from "moment";
-import stream from "stream";
-import {homedir} from "os";
 
 
-let startLogging = (logLocation) => {
-    let logStream = fs.createWriteStream(`${homedir()}/programLauncherLogs.txt`);
-    let duplex = new stream.Duplex();
-    let newConsole = new Console(duplex);
-    duplex.on("data", (data) => {
-        let timestamp = moment().format("MMMM Do YYYY, h:mm:ss a");
-        let message = `${timestamp} STDOUT: ${data}`;
-        logStream.write(message);
+const startLogging = (webContents, logFolder="./logs", name="main") => {
+    const logTimestamp = moment().format("MMMM-Do-YYYY-h-a");
+    const fileNameSpaces = `${name}-${logTimestamp}.log`;
+    const fileName = fileNameSpaces.replace(/ /g, "_");
+    const logLocation = `${logFolder}/${fileName}`;
+    const levels = {0: "Info", 1: "Warning", 2: "Error"};
+    const logFileStream = fs.createWriteStream(logLocation, {flags: "a"});
+    logFileStream.on("error", (error) => {
+        if (error.code === "ENOENT") {
+            fs.mkdir(logFolder, (error) => {
+                if (error) {
+                    throw error;
+                } else {
+                    startLogging(webContents, logFolder, name);
+                }
+            });
+        } else {
+            throw error;
+        }
     });
-    let oldConsole = window.console;
-    window.console = newConsole;
+    webContents.on("console-message", (event, level, message) => {
+        const timestamp = moment().format("MMMM Do YYYY h:mm:ss a");
+        const formattedMessage = `${timestamp} ${levels[level]}: ${message}\n`;
+        logFileStream.write(formattedMessage);
+    });
 };
 
 export default startLogging;

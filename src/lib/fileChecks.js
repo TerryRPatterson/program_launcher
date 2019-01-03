@@ -6,18 +6,18 @@ import {homedir} from "os";
 import moment from "moment";
 
 
-let openLogFile = (
+const openLogFile = (
     fileURL,
     name,
     parentDirectories,
     outStream,
     errorStream) => {
-
-    let fileNameSpaces = `${parentDirectories}|${name}`;
-    let fileName = fileNameSpaces.replace(/ /g,"_");
-    let logLocation = `${homedir()}/gameLogs/${fileName}`;
-    let fileStream = fs.createWriteStream(logLocation, {flags:"a"});
-    let timestamp = moment().format("MMMM Do YYYY, h:mm:ss a");
+    const fileNameTimestamp = moment().format("MMMM Do YYYY h");
+    const fileNameSpaces = `${parentDirectories}-${name}-${fileNameTimestamp}`;
+    const fileName = fileNameSpaces.replace(/ /g, "_");
+    const logLocation = `${homedir()}/gameLogs/${fileName}`;
+    const fileStream = fs.createWriteStream(logLocation, {flags: "a"});
+    const timestamp = moment().format("MMMM Do YYYY, h:mm:ss a");
 
     fileStream.on("error", (error) => {
         if (error.code === "ENOENT") {
@@ -34,20 +34,20 @@ let openLogFile = (
     });
     fileStream.write(`Program started ${timestamp} \n`);
     outStream.on("data", (data) => {
-        let timestamp = moment().format("MMMM Do YYYY, h:mm:ss a");
-        let message = `${timestamp} STDOUT: ${data}`;
+        const timestamp = moment().format("MMMM Do YYYY, h:mm:ss a");
+        const message = `${timestamp} STDOUT: ${data}`;
         fileStream.write(message);
     });
     errorStream.on("data", (data) => {
-        let timestamp = moment().format("MMMM Do YYYY, h:mm:ss a");
-        let message = `${timestamp} STDERR: ${data}`;
+        const timestamp = moment().format("MMMM Do YYYY, h:mm:ss a");
+        const message = `${timestamp} STDERR: ${data}`;
         fileStream.write(message);
     });
 };
 
-let isExecutableCheck = ({fileStat}) => {
-    let pUID = process.getuid();
-    let pGIDs = process.getgroups();
+const isExecutableCheck = ({fileStat}) => {
+    const pUID = process.getuid();
+    const pGIDs = process.getgroups();
     // create a comparison mask to see if anyone can execute the file
     let comparisionMask = fs.constants.S_IXOTH;
     // If the owner of the file is the executing user add the exectable user
@@ -62,19 +62,18 @@ let isExecutableCheck = ({fileStat}) => {
     }
     // Bitwise and the comparison mask against the current mode
     //  if the return value is zero then the file is not exectuable
-    let resultMask = fileStat.mode & comparisionMask;
+    const resultMask = fileStat.mode & comparisionMask;
     if (resultMask === 0) {
         return false;
-    }
-    else {
+    } else {
         return "Executable";
     }
 };
 
-let exectueProcess = (fileLocation, name, parentDirectories) => {
-    let directory = path.dirname(fileLocation);
+const exectueProcess = (fileLocation, name, parentDirectories) => {
+    const directory = path.dirname(fileLocation);
     process.chdir(directory);
-    let child = child_process.spawn(fileLocation);
+    const child = child_process.spawn(fileLocation);
     openLogFile(fileLocation, name, parentDirectories,
         child.stdout, child.stderr);
     child.stdout.on("data", (data) => {
@@ -90,62 +89,62 @@ let exectueProcess = (fileLocation, name, parentDirectories) => {
     });
 };
 
-export let isExecutable = {
+export const isExecutable = {
     check: isExecutableCheck,
     execute: exectueProcess,
     display: "Exectuables",
-    type: "Executable"
+    type: "Executable",
 };
 
-let isHTMLCheck = ({file}) => {
+const isHTMLCheck = ({file}) => {
     if (file.endsWith(".html")) {
         return "HTML";
-    }
-    else {
+    } else {
         return false;
     }
 };
 
-let htmlExecute = (fileLocation, name) => {
-    let fileURL = url.format({
+const htmlExecute = (fileLocation, name, parentDirectories) => {
+    const fullName = `${parentDirectories}-${name}`;
+    const fileURL = url.format({
         pathname: fileLocation,
         protocol: "file:",
-        slashes: true
+        slashes: true,
     });
-    window.open(fileURL, name ,"nodeIntegration=no, contextIsolation=yes");
+    window.open(fileURL, fullName);
 };
 
-export let isHTML = {
-    check:isHTMLCheck,
+export const isHTML = {
+    check: isHTMLCheck,
     execute: htmlExecute,
     display: "HTML pages",
-    type: "HTML"
+    type: "HTML",
 };
 
-let isSWFCheck = ({file}) => {
+const isSWFCheck = ({file}) => {
     if (file.endsWith(".swf")) {
         return "SWF";
-    }
-    else {
+    } else {
         return false;
     }
 };
 
-let swfExecute = (fileLocation, name) => {
-    let directory = path.dirname(fileLocation);
+const swfExecute = (fileLocation, name, parentDirectories) => {
+    const fullName = `${parentDirectories}-${name}`;
+    const directory = path.dirname(fileLocation);
     process.chdir(directory);
-    let fileURL = url.format({
+    const fileURL = url.format({
         pathname: fileLocation,
         protocol: "file:",
-        slashes: true
+        slashes: true,
     });
-    window.open(fileURL, name ,
+    window.open(fileURL, fullName,
         "nodeIntegration=no, contextIsolation=yes");
 };
 
-export let isSWF = {
-    check:isSWFCheck,
+export const isSWF = {
+    check: isSWFCheck,
     execute: swfExecute,
     display: "SWF pages",
-    type: "SWF"
+    type: "SWF",
 };

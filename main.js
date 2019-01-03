@@ -1,45 +1,50 @@
 import electron from "electron";
 import path from "path";
 import url from "url";
+import {homedir} from "os";
+
 import isDevelopment from "electron-is-dev";
 
-import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from
-    "electron-devtools-installer";
+import startLogging from "./lib/logging";
 
+import installExtension, {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from
+    "electron-devtools-installer";
 
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
 
-let pluginName = "flash-plugin";
-let pluginLocation = path.join(__dirname, pluginName);
+const pluginName = "flash-plugin";
+const pluginLocation = path.join(__dirname, pluginName);
 
 app.commandLine.appendSwitch("ppapi-flash-path", pluginLocation);
 
 let mainWindow;
 
 const createWindow = () => {
-    installExtension(REACT_DEVELOPER_TOOLS)
-        .then((name) => console.log(`Added Extension:  ${name}`))
-        .catch((err) => console.log("An error occurred: ", err));
+    if (isDevelopment) {
+        installExtension(REACT_DEVELOPER_TOOLS)
+            .then((name) => console.log(`Added Extension:  ${name}`))
+            .catch((err) => console.log("An error occurred: ", err));
 
-    installExtension(REDUX_DEVTOOLS)
-        .then((name) => console.log(`Added Extension:  ${name}`))
-        .catch((err) => console.log("An error occurred: ", err));
+        installExtension(REDUX_DEVTOOLS)
+            .then((name) => console.log(`Added Extension:  ${name}`))
+            .catch((err) => console.log("An error occurred: ", err));
+    }
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        autoHideMenuBar:true,
+        autoHideMenuBar: true,
         webPreferences: {
-            plugins: true
-        }
+            plugins: true,
+        },
     });
 
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, "index.html"),
         protocol: "file:",
-        slashes: true
+        slashes: true,
     }));
 
     // if (isDevelopment) {
@@ -50,7 +55,36 @@ const createWindow = () => {
     mainWindow.on("closed", () => {
         mainWindow = null;
     });
+
+    mainWindow.webContents.on("new-window",
+        (
+            event,
+            url,
+            frameName,
+            dispostion,
+            options
+        ) => {
+            console.log(`Caught Window ${frameName}`);
+            event.preventDefault();
+            const newOptions = {
+                ...options,
+                show: false,
+                autoHideMenuBar: true,
+                title: frameName,
+                webPreferences: {
+                    nodeIntegration: false,
+                    contextIsolation: true}
+            };
+            const win = new BrowserWindow(newOptions);
+            win.once("ready-to-show", () => win.show());
+            win.loadURL(url);
+            startLogging(win.webContents, `${homedir()}/gameLogs`, frameName);
+            event.newGuest = win;
+        });
+
+    startLogging(mainWindow.webContents);
 };
+
 
 app.on("ready", createWindow);
 
