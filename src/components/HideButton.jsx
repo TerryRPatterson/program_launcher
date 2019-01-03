@@ -13,7 +13,7 @@ const mapDispatchToProps = (dispatch, {fileURL}) => {
 
 const HideButton = ({hide}) => {
     return <img src="assets/Close.png" width="20px" height="20px"
-        onClick={hide} className={"corner_button"}/>;
+        onClick={hide} className={"corner_button"} alt={"Hide current file."}/>;
 };
 
 HideButton.propTypes ={
