@@ -1,5 +1,6 @@
 import findExecutables from "../lib/findExecutables";
 import {isHTML, isExecutable, isSWF} from "../lib/fileChecks";
+import Fuse from "fuse.js";
 
 
 const checks = [isHTML, isExecutable, isSWF];
@@ -38,4 +39,35 @@ export const showFile = (fileURL) => {
 
 export const showAllFiles = (state, dispatch) => {
     state.blackList.forEach((entry) => dispatch(showFile(entry)));
+};
+
+
+export const filter = (filterTerm=null, fileList, blackList) => {
+    if (filterTerm) {
+        const options = {
+            caseSensitive: false,
+            shouldSort: true,
+            tokenize: false,
+            threshold: 0.6,
+            location: 0,
+            distance: 100,
+            maxPatternLength: 32,
+            minMatchCharLength: 1,
+            keys: [
+                "type",
+                "name",
+                "parentDirectories",
+            ],
+        };
+        const fileListArray = Object.values(fileList).filter( ({url}) => {
+            return !blackList[url];
+        });
+        const filter = new Fuse(fileListArray, options);
+        const filteredList = filter.search(filterTerm);
+        console.log(fileList);
+        console.log(filteredList);
+        return {type: "filter", newList: filteredList};
+    } else {
+        return {type: "filter", newList: []};
+    }
 };

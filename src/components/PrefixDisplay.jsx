@@ -8,8 +8,8 @@ import PropTypes from "prop-types";
 const currentWindow = remote.getCurrentWindow();
 const {dialog} = remote;
 
-const mapStateToProps = ({prefix, loading}) => {
-    return {prefix, loading};
+const mapStateToProps = ({prefix}) => {
+    return {prefix};
 };
 
 const mapDispatchToProps = ((dispatch) => {

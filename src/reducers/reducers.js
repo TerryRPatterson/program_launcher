@@ -41,7 +41,13 @@ export const loading = (prevState=true, action) => {
     return prevState;
 };
 
+export const filter = (prevState=[], action) => {
+    if (action.type === "filter") {
+        return action["newList"];
+    }
+    return [];
+};
 
-const reducers = {fileList, blackList, prefix, loading};
+const reducers = {fileList, blackList, prefix, loading, filter};
 
 export default reducers;

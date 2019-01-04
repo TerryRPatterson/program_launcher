@@ -13,7 +13,9 @@ types[isExecutable.type] = isExecutable.execute;
 types[isHTML.type] = isHTML.execute;
 types[isSWF.type] = isSWF.execute;
 
-
+const mapStateToProps = ({blackList}) => {
+    return {blackList};
+};
 const mapDispatchToProps = (dispatch, {url}) => {
     const hide = (event) => {
         event.stopPropagation();
@@ -37,8 +39,12 @@ const mapDispatchToProps = (dispatch, {url}) => {
     @param {string} main.nameNoExtension The name of the file without a file
         extension.
     @return {React.element}*/
-export const FileDisplay = ({type, url, name, setHover, unHover, hovered,
-    parentDirectories, nameNoExtension}) => {
+export const FileDisplay = ({entry, blackList}) => {
+    const {type, url, name, setHover, unHover, hovered,
+        parentDirectories, nameNoExtension} = entry;
+    if (blackList[url] === true) {
+        return null;
+    }
     const hover = (event) => {
         if (event.ctrlKey) {
             setHover();
@@ -73,17 +79,20 @@ export const FileDisplay = ({type, url, name, setHover, unHover, hovered,
 };
 
 FileDisplay.propTypes = {
-    type: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
+    entry: PropTypes.shape({
+        type: PropTypes.string.isRequired,
+        url: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        parentDirectories: PropTypes.string.isRequired,
+        nameNoExtension: PropTypes.string.isRequired,
+    }).isRequired,
+    blackList: PropTypes.objectOf(PropTypes.bool.isRequired),
     setHover: PropTypes.func.isRequired,
     unHover: PropTypes.func.isRequired,
     hovered: PropTypes.string,
-    parentDirectories: PropTypes.string.isRequired,
-    nameNoExtension: PropTypes.string.isRequired,
 };
 
-const ConnectedFileDisplay = connect(null,
+const ConnectedFileDisplay = connect(mapStateToProps,
     mapDispatchToProps)(FileDisplay);
 
 export default ConnectedFileDisplay;

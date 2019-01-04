@@ -6,8 +6,8 @@ import Loading from "./Loading";
 import PropTypes from "prop-types";
 
 
-const mapStateToProps = ({fileList, blackList}) => {
-    return {fileList, blackList};
+const mapStateToProps = ({fileList, loading, filter}) => {
+    return {fileList, loading, filter};
 };
 
 /** List of files stored in redux store.
@@ -43,32 +43,32 @@ export class FileList extends React.Component {
 
     /** Rendering logic for the component.
         @return {React.element}
+        @ignore
         */
     render() {
-        const {fileList, blackList} = this.props;
+        const {fileList, loading, filter} = this.props;
         const {hovered} = this.state;
-        if (Object.keys(fileList).length === 0) {
+        if (Object.keys(fileList).length === 0 || loading) {
             return <Loading/>;
         }
-        return <div className={"file_list"}>
-            <h3></h3>
-            {Object.keys(fileList).sort().map((fileURL) => {
-                if (blackList[fileURL] === true) {
-                    return null;
-                }
-                const {
-                    type,
-                    name,
-                    url,
-                    parentDirectories,
-                    nameNoExtension,
-                } = fileList[fileURL];
-                return <FileDisplay type={type} name={name} hovered={hovered}
-                    parentDirectories={parentDirectories}
-                    key={url} url={url} nameNoExtension={nameNoExtension}
+        let componentList;
+        if (Array.isArray(filter) && filter.length > 0) {
+            componentList = filter.map( (entry) => {
+                const {url} = entry;
+                return <FileDisplay entry={entry} hovered={hovered} key={url}
                     setHover={() => this.setHover(url)}
                     unHover={() => this.setHover(null)}/>;
-            })}
+            });
+        } else {
+            componentList = Object.keys(fileList).sort().map((url) => {
+                const entry = fileList[url];
+                return <FileDisplay entry={entry} hovered={hovered} key={url}
+                    setHover={() => this.setHover(url)}
+                    unHover={() => this.setHover(null)}/>;
+            });
+        }
+        return <div className={"file_list"}>
+            {componentList}
         </div>;
     }
 }
@@ -81,7 +81,11 @@ FileList.propTypes = {
         name: PropTypes.string.isRequired,
         url: PropTypes.string.isRequired,
     })),
-    blackList: PropTypes.objectOf(PropTypes.bool.isRequired),
+    loading: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.bool,
+    ]).isRequired,
+    filter: PropTypes.array.isRequired,
 };
 
 
