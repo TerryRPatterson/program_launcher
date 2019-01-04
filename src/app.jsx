@@ -1,33 +1,22 @@
 import React from "react";
 import FileList from "./components/FileList";
 import PrefixDisplay from "./components/PrefixDisplay";
-import {connect} from "react-redux";
-import Loading from "./components/Loading";
-import PropTypes from "prop-types";
+import SearchBar from "./components/SearchBar";
 
-const mapStateToProps = ({loading}) => {
-    return {loading};
-};
 
-const App = ({loading}) => {
+const App = () => {
     return (
         <div className={"app"}>
+            <SearchBar/>
+
             <PrefixDisplay/>
             {
-                loading ?
-                    <Loading/> :
-                    <FileList/>
+                <FileList/>
             }
         </div>
 
     );
 };
 
-App.propTypes = {
-    loading: PropTypes.bool.isRequired,
-};
 
-
-const ConnectedApp = connect(mapStateToProps)(App);
-
-export default ConnectedApp;
+export default App;

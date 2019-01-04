@@ -17,7 +17,7 @@ const frozenBlackList = localStorage.getItem("blackList");
 const blackList = JSON.parse(frozenBlackList);
 
 
-const initalState = {blackList, fileList: {}, loading: true};
+const initalState = {blackList, fileList: {}, loading: true, filter: []};
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
