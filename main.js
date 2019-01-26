@@ -37,9 +37,6 @@ const createWindow = () => {
         width: 800,
         height: 600,
         autoHideMenuBar: true,
-        webPreferences: {
-            plugins: true,
-        },
     });
 
     mainWindow.loadURL(url.format({
@@ -75,6 +72,8 @@ const createWindow = () => {
                 webPreferences: {
                     nodeIntegration: false,
                     contextIsolation: true,
+                    plugins: true,
+
                 },
             };
             const win = new BrowserWindow(newOptions);

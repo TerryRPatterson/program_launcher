@@ -11,7 +11,6 @@ import {getFileList} from "./reducers/actionCreators";
 
 const searchDirectory = "/mnt/Big Slowish/Docs/nothing/games";
 
-
 const frozenBlackList = localStorage.getItem("blackList");
 
 const blackList = JSON.parse(frozenBlackList);
